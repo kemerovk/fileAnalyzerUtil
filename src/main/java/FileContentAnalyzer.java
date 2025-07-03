@@ -64,19 +64,19 @@ public class FileContentAnalyzer {
     private void printIntegerStats() {
         if (integers.isEmpty()) return;
 
-        List<Long> values = integers.stream()
-                .map(Long::valueOf)
+        List<BigDecimal> values = integers.stream()
+                .map(BigDecimal::new)
                 .toList();
 
-        long min = values.stream().mapToLong(Long::longValue).min().orElseThrow();
-        long max = values.stream().mapToLong(Long::longValue).max().orElseThrow();
-        double avg = values.stream().mapToLong(Long::longValue).average().orElse(0.0);
-        long sum = values.stream().mapToLong(Long::longValue).sum();
+        BigDecimal min = values.stream().min(BigDecimal::compareTo).orElse(null);
+        BigDecimal max = values.stream().max(BigDecimal::compareTo).orElse(null);
+        BigDecimal sum = values.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
+        double avg = sum.divide(BigDecimal.valueOf(values.size()), BigDecimal.ROUND_HALF_UP).doubleValue();
 
         System.out.printf("Целые числа: %d шт.%n", integers.size());
-        System.out.printf("Минимум: %d%n", min);
-        System.out.printf("Максимум: %d%n", max);
-        System.out.printf("Сумма: %d%n", sum);
+        System.out.printf("Минимум: %s%n", min.toPlainString());
+        System.out.printf("Максимум: %s%n", max.toPlainString());
+        System.out.printf("Сумма: %s%n", sum.toPlainString());
         System.out.printf("Среднее: %.2f%n", avg);
         System.out.println();
     }
@@ -84,19 +84,19 @@ public class FileContentAnalyzer {
     private void printFloatStats() {
         if (floats.isEmpty()) return;
 
-        List<Double> values = floats.stream()
-                .map(Double::valueOf)
+        List<BigDecimal> values = floats.stream()
+                .map(BigDecimal::new)
                 .toList();
 
-        double min = values.stream().mapToDouble(Double::doubleValue).min().orElseThrow();
-        double max = values.stream().mapToDouble(Double::doubleValue).max().orElseThrow();
-        double avg = values.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
-        double sum = values.stream().mapToDouble(Double::doubleValue).sum();
+        BigDecimal min = values.stream().min(BigDecimal::compareTo).orElse(null);
+        BigDecimal max = values.stream().max(BigDecimal::compareTo).orElse(null);
+        BigDecimal sum = values.stream().reduce(BigDecimal.ZERO, BigDecimal::add);
+        double avg = sum.divide(BigDecimal.valueOf(values.size()), BigDecimal.ROUND_HALF_UP).doubleValue();
 
         System.out.printf("Дробные числа: %d шт.%n", floats.size());
-        System.out.printf("Минимум: %.4f%n", min);
-        System.out.printf("Максимум: %.4f%n", max);
-        System.out.printf("Сумма: %.4f%n", sum);
+        System.out.printf("Минимум: %s%n", min.toPlainString());
+        System.out.printf("Максимум: %s%n", max.toPlainString());
+        System.out.printf("Сумма: %s%n", sum.toPlainString());
         System.out.printf("Среднее: %.4f%n", avg);
         System.out.println();
     }
@@ -149,7 +149,7 @@ public class FileContentAnalyzer {
     }
 
     private boolean hasCorrectPrecision(String s){
-        return s.chars().filter(c -> c >= '0' && c <= '9').count() <= 17;
+        return s.chars().filter(c -> c >= '0' && c <= '9').count() <= 16;
     }
 
     private void writeFile(String fileName, List<String> fileContent, Setup setup) throws IOException {
