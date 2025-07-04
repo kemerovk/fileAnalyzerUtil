@@ -1,8 +1,12 @@
+import fileService.FileContentAnalyzer;
+
+import java.io.IOException;
 
 public class MainApp {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
 
         FileContentAnalyzer fp = new FileContentAnalyzer();
-        System.out.println(fp.executeUtil(OptionHandler.setup(args)));
+        fp.executeUtil(OptionHandler.setup(args));
+
     }
 }
